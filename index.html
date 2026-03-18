@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+
 body {
   margin:0;
   background:black;
@@ -11,13 +11,91 @@ body {
   font-family:monospace;
   overflow:hidden;
 }
+
+/* SKULL BG */
+#bg {
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: url('https://i.imgur.com/8QZ7Z6G.png') center/cover no-repeat;
+  filter: grayscale(100%) contrast(120%);
+  animation: breathe 6s infinite ease-in-out;
+}
+
+/* DARK OVERLAY */
+#overlay {
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.75);
+}
+
+/* GLOWING EYES */
+.eyes {
+  position:absolute;
+  top:42%;
+  left:50%;
+  transform:translateX(-50%);
+  width:200px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.eye {
+  width:20px;
+  height:20px;
+  background:red;
+  border-radius:50%;
+  box-shadow:0 0 20px red, 0 0 40px red;
+  animation: eyeGlow 1.5s infinite;
+}
+
+@keyframes eyeGlow {
+  0% {opacity:0.5;}
+  50% {opacity:1;}
+  100% {opacity:0.5;}
+}
+
+/* SCANLINES */
+body::before {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.04) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  animation: scan 0.15s infinite;
+  z-index:3;
+}
+
+@keyframes scan {
+  0% {transform: translateY(0);}
+  100% {transform: translateY(3px);}
+}
+
+/* BREATH */
+@keyframes breathe {
+  0% {transform: scale(1);}
+  50% {transform: scale(1.05);}
+  100% {transform: scale(1);}
+}
+
+/* CENTER */
 .center {
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
   text-align:center;
+  z-index:5;
 }
+
+/* BOOT */
 #boot {
   font-size:22px;
   border-right:2px solid white;
@@ -26,8 +104,23 @@ body {
   width:0;
   animation: typing 3s steps(35,end) forwards;
 }
+
 @keyframes typing { to { width: 320px; } }
 
+/* WHISPER */
+#whisper {
+  margin-top:20px;
+  font-size:16px;
+  opacity:0;
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+  0%,100% {opacity:0;}
+  50% {opacity:1;}
+}
+
+/* ENTER */
 #enter {
   margin-top:40px;
   font-size:20px;
@@ -37,42 +130,125 @@ body {
   cursor:pointer;
 }
 
+/* MAIN */
 #main { display:none; }
 
-h1 { font-size:40px; }
-h2 { font-size:28px; margin-top:20px; }
-p { font-size:20px; margin-top:30px; font-style:italic; }
+/* TEXT */
+h2 {
+  font-size:34px;
+  animation: glitch 1s infinite;
+}
+
+p {
+  font-size:22px;
+  margin-top:30px;
+  font-style:italic;
+}
+
+/* GLITCH */
+@keyframes glitch {
+  0% {text-shadow:2px 0 red, -2px 0 blue;}
+  50% {text-shadow:-2px 0 red, 2px 0 blue;}
+  100% {text-shadow:2px 0 red, -2px 0 blue;}
+}
+
+/* FLASH */
+.flash {
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:white;
+  opacity:0;
+  z-index:10;
+}
+
+/* SHAKE */
+.shake {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0% {transform: translate(2px,2px);}
+  25% {transform: translate(-2px,-2px);}
+  50% {transform: translate(2px,-2px);}
+  75% {transform: translate(-2px,2px);}
+  100% {transform: translate(0,0);}
+}
 
 </style>
 </head>
 
 <body>
 
+<div id="bg"></div>
+<div id="overlay"></div>
+
+<!-- EYES -->
+<div class="eyes">
+  <div class="eye"></div>
+  <div class="eye"></div>
+</div>
+
 <div class="center" id="bootScreen">
-  <div id="boot">ACCESSING JAKHAR'S DEN...</div>
+  <div id="boot"> JAKHAR'S DEN...</div>
+  <div id="whisper">...You’re already inside...</div>
   <div id="enter">[ ENTER ]</div>
 </div>
 
+<div class="flash" id="flash"></div>
+
 <div id="main" class="center">
-  <h1>STAY LOYAL. MOVE SILENT. WIN LOUD.</h1>
   <h2>— JAKHAR’S DEN —</h2>
   <p>Your Body is yours, but Soul belongs to me now!!</p>
 </div>
 
+<!-- SOUND EFFECT -->
+<audio id="entrySound">
+  <source src="https://www.soundjay.com/button/beep-07.wav">
+</audio>
+
+<!-- MAIN MUSIC -->
 <audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+  <source src="https://gofile.io/d/t5NT4d">
 </audio>
 
 <script>
+
+// whisper
+setTimeout(() => {
+  document.getElementById("whisper").style.opacity = "1";
+}, 2000);
+
+// show enter
 setTimeout(() => {
   document.getElementById("enter").style.display = "inline-block";
-}, 3000);
+}, 3500);
 
+// click enter
 document.getElementById("enter").onclick = function() {
+
+  // play entry sound
+  document.getElementById("entrySound").play();
+
+  // flash
+  let flash = document.getElementById("flash");
+  flash.style.opacity = "1";
+  setTimeout(() => flash.style.opacity = "0", 200);
+
+  // shake
+  document.body.classList.add("shake");
+  setTimeout(()=> document.body.classList.remove("shake"),300);
+
+  // switch screen
   document.getElementById("bootScreen").style.display = "none";
   document.getElementById("main").style.display = "block";
-  document.getElementById("music").play();
+
+  // delay music drop (cinematic timing)
+  setTimeout(() => {
+    document.getElementById("music").play();
+  }, 300);
 }
+
 </script>
 
 </body>
