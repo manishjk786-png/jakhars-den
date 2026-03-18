@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin:0;
+  background:black;
+  color:white;
+  font-family:monospace;
+  overflow:hidden;
+}
+.center {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+#boot {
+  font-size:22px;
+  border-right:2px solid white;
+  white-space:nowrap;
+  overflow:hidden;
+  width:0;
+  animation: typing 3s steps(35,end) forwards;
+}
+@keyframes typing { to { width: 320px; } }
+
+#enter {
+  margin-top:40px;
+  font-size:20px;
+  padding:10px 20px;
+  border:1px solid white;
+  display:none;
+  cursor:pointer;
+}
+
+#main { display:none; }
+
+h1 { font-size:40px; }
+h2 { font-size:28px; margin-top:20px; }
+p { font-size:20px; margin-top:30px; font-style:italic; }
+
+</style>
+</head>
+
+<body>
+
+<div class="center" id="bootScreen">
+  <div id="boot">ACCESSING JAKHAR'S DEN...</div>
+  <div id="enter">[ ENTER ]</div>
+</div>
+
+<div id="main" class="center">
+  <h1>STAY LOYAL. MOVE SILENT. WIN LOUD.</h1>
+  <h2>— JAKHAR’S DEN —</h2>
+  <p>Your Body is yours, but Soul belongs to me now!!</p>
+</div>
+
+<audio id="music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<script>
+setTimeout(() => {
+  document.getElementById("enter").style.display = "inline-block";
+}, 3000);
+
+document.getElementById("enter").onclick = function() {
+  document.getElementById("bootScreen").style.display = "none";
+  document.getElementById("main").style.display = "block";
+  document.getElementById("music").play();
+}
+</script>
+
+</body>
+</html>
